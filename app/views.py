@@ -25,7 +25,7 @@ def index():
             flash("Something went wrong", "danger")
             return render_template('index.html', contact={}, search="", home="active")
 
-        if all:
+        if all is not None:
             flash("Phone number already exists", "danger")
             return redirect(url_for('index'))
 
@@ -69,9 +69,11 @@ def edit(id):
             flash("Something went wrong", "danger")
             return render_template('index.html', contact={}, search="", home="active")
 
-        if all['phone_number'] == phone_number and all['_id'] != ObjectId(id):
-            flash("Phone number already exists", "danger")
-            return redirect(url_for('edit', id=id))
+        if all is not None:
+            print(all['phone_number'], phone_number, all['_id'], id)
+            if all['phone_number'] == phone_number and all['_id'] != id:
+                flash("Phone number already exists", "danger")
+                return redirect(url_for('edit', id=id))
 
         one = {
             'phone_number': phone_number.lower(),
