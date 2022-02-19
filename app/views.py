@@ -1,6 +1,7 @@
 from flask import render_template, redirect, request, flash, url_for
 from app import app, mongodb
 from datetime import datetime
+from bson.objectid import ObjectId
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -12,7 +13,10 @@ def index():
         address = request.form['address']
         city = request.form['city']
 
-        # do the logic and save to database
+        # if not first_name or not last_name or phone_number or\
+        #     not address or not city:
+        #     flash("Incomplete Data", "danger")
+        #     return redirect(url_for('index'))
 
         one = {
             'phone_number': phone_number.lower(),
@@ -27,22 +31,44 @@ def index():
 
         flash("Record saved successfully", "success")
         return redirect(url_for('index'))
-    return render_template('index.html', name='Register', select="index")
+    return render_template('index.html', contact={}, search="", home="active")
 
 
-@app.route('/edit/<string:id>/', methods=['GET', 'POST'])
+@app.route('/<string:id>/', methods=['GET', 'POST'])
 def edit(id):
-    # mongodb.db.addressbuk.find_one
+    contact = mongodb.db.addressbuk.find_one({'_id': ObjectId(id)})
     if request.method == "POST":
         first_name = request.form['first_name']
         last_name = request.form['last_name']
         phone_number = request.form['phone_number']
         address = request.form['address']
+        city = request.form['city']
 
-        # save to database
-        flash("Record updated successfully", "success")
-        return redirect(url_for('edit'))
-    return render_template('edit.html', name='Register')
+        # if not first_name or not last_name or phone_number or \
+        #         not address or not city:
+        #     flash("Incomplete Data", "danger")
+        #     return redirect(url_for('index'))
+
+        one = {
+            'phone_number': phone_number.lower(),
+            'first_name': first_name.lower(),
+            'last_name': last_name.lower(),
+            'address': address,
+            'city': city.lower(),
+            'date': datetime.utcnow().isoformat()
+        }
+
+        mongodb.db.addressbuk.update_one(
+            {'_id': ObjectId(contact._id)},
+            {'$set': one}
+        )
+
+        flash("Record Updated successfully", "success")
+        return redirect(url_for('index'))
+
+    print(contact)
+
+    return render_template('index.html', contact=contact)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -51,10 +77,28 @@ def search():
         search_by = request.form['search_by']
         search_item = request.form['search_item']
 
+        if not search_by or not search_item:
+            flash("Incomplete Query Input", "danger")
+            return render_template('search.html', search="active", home="")
+
         # query database
-        all = mongodb.db.addressbuk.find({'{}'.format(search_by): search_item})
+        try:
+            all = mongodb.db.addressbuk.find({'{}'.format(search_by): search_item})
+        except ConnectionError as e:
+            print("Connection Error - {}".format(e))
+            flash("Something went wrong", "danger")
+            return render_template('search.html', search="active", home="")
 
         all_item = list(all)
-        return redirect(url_for('search', list=all_item))
-        # return render_template('results.html', list=all_item)
-    return render_template('search.html', select="search")
+        return render_template('search.html', list=all_item, search="active", home="")
+    return render_template('search.html', search="active", home="")
+
+
+@app.route('/delete/<string:id>/', methods=['POST'])
+def delete(id):
+    one_contact = mongodb.db.addressbuk.find_one({'_id': ObjectId(id)})
+    if not one_contact:
+        flash("No Record found", "danger")
+        return redirect(url_for('search'))
+    mongodb.db.addressbuk.delete_one({'_id': ObjectId(id)})
+    return redirect(url_for('search'))

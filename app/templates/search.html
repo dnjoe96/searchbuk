@@ -21,8 +21,7 @@
 
 </form>
 
-{{ list }}
-<!--{% if list %}-->
+{% if list %}
     <table class="table">
       <thead>
         <tr>
@@ -32,6 +31,8 @@
           <th scope="col">Phone Number</th>
             <th scope="col">Address</th>
             <th scope="col">City</th>
+            <th scope="col"></th>
+            <th scope="col"></th>
         </tr>
       </thead>
       <tbody>
@@ -43,9 +44,16 @@
           <td>{{ one.phone_number }}</td>
             <td>{{ one.address }}</td>
             <td>{{ one.city }}</td>
+            <td><a href="/{{ one._id }}" class="btn btn-default pull-right">Edit</a></td>
+            <td>
+                <form action="{{ url_for('delete', id=one._id) }}" method="post">
+                    <input type="hidden" name="method" value="DELETE">
+                    <input type="submit" value="Delete" class="btn btn-danger">
+                </form>
+            </td>
         </tr>
       {% endfor %}
       </tbody>
     </table>
-<!--{% endif %}-->
+{% endif %}
 {% endblock %}
