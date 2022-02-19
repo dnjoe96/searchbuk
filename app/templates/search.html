@@ -17,7 +17,7 @@
       <input type="text" id="TextInput" name="search_item" class="form-control" placeholder="Search">
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary">Search</button>
 
 </form>
 
@@ -44,7 +44,7 @@
           <td>{{ one.phone_number|capitalize }}</td>
             <td>{{ one.address }}</td>
             <td>{{ one.city|capitalize }}</td>
-            <td><a href="/{{ one._id }}" class="btn btn-default pull-right">Edit</a></td>
+            <td><a href="{{ url_for('edit', id=one._id) }}" class="btn btn-default pull-right">Edit</a></td>
             <td>
                 <form action="{{ url_for('delete', id=one._id) }}" method="post">
                     <input type="hidden" name="method" value="DELETE">

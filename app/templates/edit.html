@@ -2,8 +2,8 @@
 {% block body %}
 <div class="jumbotron text-center">
     <h1>Address Book</h1><br>
-    <h5>Enter information below</h5>
-      <form class="row g-3" action="/" method="POST">
+    <h5>Update information below</h5>
+      <form class="row g-3" action="{{ url_for('edit', id=contact._id) }}" method="POST">
         <div class="col-md-6">
           <label class="form-label">First Name</label>
           <input type="text" class="form-control" placeholder="First name" aria-label="First name" value="{{ contact.first_name }}" name="first_name" required>
@@ -24,9 +24,14 @@
           <label for="phoneNumber" class="form-label">Phone Number</label>
           <input type="text" class="form-control" id="phoneNumber" value="{{ contact.phone_number }}" name="phone_number" required>
         </div>
+        <input type="hidden" name="id" value="{{ contact._id }}">
         <div class="col-12">
             <button class="btn btn-primary" type="submit">Save</button>
         </div>
+      </form><br>
+      <form action="{{ url_for('index') }}" method="GET">
+          <input type="hidden">
+          <input type="submit" value="Cancel" class="btn btn-danger">
       </form>
 </div>
 {% endblock %}
