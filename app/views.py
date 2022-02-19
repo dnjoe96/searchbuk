@@ -58,8 +58,10 @@ def edit(id):
             'date': datetime.utcnow().isoformat()
         }
 
+        print(id)
+
         mongodb.db.addressbuk.update_one(
-            {'_id': ObjectId(contact._id)},
+            {'_id': ObjectId(id)},
             {'$set': one}
         )
 
@@ -83,7 +85,7 @@ def search():
 
         # query database
         try:
-            all = mongodb.db.addressbuk.find({'{}'.format(search_by): search_item})
+            all = mongodb.db.addressbuk.find({search_by.lower(): search_item.lower()})
         except ConnectionError as e:
             print("Connection Error - {}".format(e))
             flash("Something went wrong", "danger")

@@ -13,7 +13,7 @@
     </div>
 
     <div class="mb-3">
-      <label for="TextInput" class="form-label">Disabled input</label>
+      <label for="TextInput" class="form-label">Search Item</label>
       <input type="text" id="TextInput" name="search_item" class="form-control" placeholder="Search">
     </div>
 
@@ -39,11 +39,11 @@
       {% for one in list %}
         <tr>
           <th scope="row">1</th>
-          <td>{{ one.first_name }}</td>
-          <td>{{ one.last_name }}</td>
-          <td>{{ one.phone_number }}</td>
+          <td>{{ one.first_name|capitalize }}</td>
+          <td>{{ one.last_name|capitalize }}</td>
+          <td>{{ one.phone_number|capitalize }}</td>
             <td>{{ one.address }}</td>
-            <td>{{ one.city }}</td>
+            <td>{{ one.city|capitalize }}</td>
             <td><a href="/{{ one._id }}" class="btn btn-default pull-right">Edit</a></td>
             <td>
                 <form action="{{ url_for('delete', id=one._id) }}" method="post">
