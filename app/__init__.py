@@ -11,6 +11,6 @@ MONGO_URI = 'mongodb+srv://{}:{}@cluster0.of0j7.azure.mongodb.net/searchbuk?retr
 mongodb = PyMongo(app, MONGO_URI)
 
 app.config['SECRET_KEY'] = 'SECRET_KEY'
-app.config['DEBUG'] = True
+app.config['DEBUG'] = False
 
-from app import views, models
+from app import views

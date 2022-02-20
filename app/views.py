@@ -70,8 +70,8 @@ def edit(id):
             return render_template('index.html', contact={}, search="", home="active")
 
         if all is not None:
-            print(all['phone_number'], phone_number, all['_id'], id)
-            if all['phone_number'] == phone_number and all['_id'] != id:
+            print(all['phone_number'], phone_number, all['_id'], ObjectId(id))
+            if all['phone_number'] == phone_number and all['_id'] != ObjectId(id):
                 flash("Phone number already exists", "danger")
                 return redirect(url_for('edit', id=id))
 
