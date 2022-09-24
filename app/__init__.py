@@ -1,7 +1,8 @@
-import os
+import os, time
 from flask import Flask
 from flask_pymongo import PyMongo
 import urllib.parse
+from threading import Thread
 
 app = Flask(__name__)
 
@@ -13,4 +14,6 @@ mongodb = PyMongo(app, MONGO_URI)
 app.config['SECRET_KEY'] = 'SECRET_KEY'
 app.config['DEBUG'] = False
 
-from app import views
+
+from searchbuk import views
+from quickcheck import views
