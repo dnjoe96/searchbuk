@@ -1,0 +1,37 @@
+{% extends 'quickcheck/layout.html' %}
+
+{% block body %}
+
+<h1>Dashboard <small>Welcome</small></h1>
+
+{% for post in pages %}
+<div class="card">
+  <div class="card-header">
+    by {{ post.by }}
+  </div>
+  <div class="card-body">
+      <h5 class="card-title"> {{ post.title }} </h5>
+      <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+      <a href="{{ post.url }}" target="_blank" class="btn btn-primary"> Read More ... </a>
+  </div>
+</div>
+{% endfor %}
+<br>
+
+<nav aria-label="...">
+  <ul class="pagination">
+    <li class="page-item {% if not pager.has_prev %} disabled {% endif %}">
+      <a class="page-link" href="./quickcheck?page={{ pager.prev_num }} ">Previous</a>
+    </li>
+    <li class="page-item"><a class="page-link" href="./quickcheck?page={{ pager.prev_num }}"> {{ pager.prev_num }} </a></li>
+    <li class="page-item active" aria-current="page">
+      <a class="page-link" href="#"> {{ pager.page }} </a>
+    </li>
+    <li class="page-item"><a class="page-link" href="./quickcheck?page={{ pager.next_num }}"> {{ pager.next_num }} </a></li>
+    <li class="page-item">
+      <a class="page-link" href="./quickcheck?page={{ pager.next_num }}">Next</a>
+    </li>
+  </ul>
+</nav>
+
+{% endblock %}

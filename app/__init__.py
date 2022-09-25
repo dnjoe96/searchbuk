@@ -16,4 +16,4 @@ app.config['DEBUG'] = False
 
 
 from searchbuk import views
-from quickcheck import views
+from quickcheck import index_page

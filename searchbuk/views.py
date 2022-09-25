@@ -23,7 +23,7 @@ def index():
         except ConnectionError as e:
             print("Connection Error - {}".format(e))
             flash("Something went wrong", "danger")
-            return render_template('index.html', contact={}, search="", home="active")
+            return render_template('searchbuk/index.html', contact={}, search="", home="active")
 
         if all is not None:
             flash("Phone number already exists", "danger")
@@ -42,7 +42,7 @@ def index():
 
         flash("Record saved successfully", "success")
         return redirect(url_for('index'))
-    return render_template('index.html', contact={}, search="", home="active")
+    return render_template('searchbuk/index.html', contact={}, search="", home="active")
 
 
 @app.route('/edit/<string:id>/', methods=['GET', 'POST'])
@@ -67,7 +67,7 @@ def edit(id):
         except ConnectionError as e:
             print("Connection Error - {}".format(e))
             flash("Something went wrong", "danger")
-            return render_template('index.html', contact={}, search="", home="active")
+            return render_template('searchbuk/index.html', contact={}, search="", home="active")
 
         if all is not None:
             print(all['phone_number'], phone_number, all['_id'], ObjectId(id))
@@ -92,7 +92,7 @@ def edit(id):
         flash("Record Updated successfully", "success")
         return redirect(url_for('search'))
 
-    return render_template('edit.html', contact=contact)
+    return render_template('searchbuk/edit.html', contact=contact)
 
 
 @app.route('/search', methods=['GET', 'POST'])
@@ -107,18 +107,18 @@ def search():
 
         if not search_by or not search_item:
             flash("Incomplete Query Input", "danger")
-            return render_template('search.html', search="active", home="")
+            return render_template('searchbuk/search.html', search="active", home="")
 
         try:
             all = mongodb.db.addressbuk.find({search_by.lower(): search_item.lower()})
         except ConnectionError as e:
             print("Connection Error - {}".format(e))
             flash("Something went wrong", "danger")
-            return render_template('search.html', search="active", home="")
+            return render_template('searchbuk/search.html', search="active", home="")
 
         all_item = list(all)
-        return render_template('search.html', list=all_item, search="active", home="")
-    return render_template('search.html', search="active", home="")
+        return render_template('searchbuk/search.html', list=all_item, search="active", home="")
+    return render_template('searchbuk/search.html', search="active", home="")
 
 
 @app.route('/delete/<string:id>/', methods=['POST'])

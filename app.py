@@ -38,7 +38,7 @@ def update_db():
 
 def background_task():
     while True:
-        time.sleep(5)
+        time.sleep(5 * 600)
         update_db()
 
 
