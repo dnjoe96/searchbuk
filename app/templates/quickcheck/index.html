@@ -2,7 +2,7 @@
 
 {% block body %}
 
-<h1>Dashboard <small>Welcome</small></h1>
+<h3 style="text-align: center;"> Latest News</h3>
     <div class="container">
         <form class="d-flex" role="search" action="/quickcheck" method="GET">
           <input class="form-control me-2" type="search"  name="search_item" placeholder="Type" aria-label="Search">
@@ -13,11 +13,11 @@
 {% for post in pages %}
 <div class="card">
   <div class="card-header">
-    by {{ post.by }}
+      Written by <b>{{ post.by }}</b>
   </div>
   <div class="card-body">
-      <h5 class="card-title"> {{ post.title }} </h5>
-      <h5 class="card-text"> Type: {{ post.type }} </h5>
+      <h5 class="card-title" style="color: blue;"> {{ post.title }} </h5>
+      <h6 class="card-text"> <b><l>Type</l>: {{ post.type }}</b> </h6>
       <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
       <a href="{{ post.url }}" target="_blank" class="btn btn-primary"> Read More ... </a>
   </div>
