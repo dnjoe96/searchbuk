@@ -1,9 +1,12 @@
+import random
+
 from flask import render_template, redirect, request, flash, url_for, jsonify
 from app import app, mongodb
 from datetime import datetime
 from bson.objectid import ObjectId
 from bson.json_util import dumps, loads
 import json
+import uuid
 
 
 class Pager:
@@ -13,11 +16,12 @@ class Pager:
 
 @app.route('/quickcheck', methods=['GET', 'POST'])
 def index_page():
-    q = request.args.get('q')
-
-    if q:
-        posts = mongodb.db.newsbuk.find({'type': q})
-        count = mongodb.db.newsbuk.count_documents({'type': q})
+    search_item = request.args.get('search_item')
+    print(search_item)
+    if search_item:
+        print('in search item')
+        posts = mongodb.db.newsbuk.find({'type': search_item})
+        count = mongodb.db.newsbuk.count_documents({'type': search_item})
     else:
         posts = mongodb.db.newsbuk.find()
         count = mongodb.db.newsbuk.count_documents({})
@@ -33,20 +37,26 @@ def index_page():
     pager.has_prev = True
     if page == 1:
         pager.has_prev = False
-    pager.prev_num = page - 1 if page > 2 else 1
+    pager.prev_num = page - 1
     pager.next_num = page + 1 if count > (page * 10) else page
     pager.page = page
     print(pager.page, pager.has_prev, pager.prev_num, pager.next_num)
-    pages = posts.skip(page * 10).limit(10)
 
-    return render_template('quickcheck/index.html', posts=posts, pages=pages, pager=pager, page=page)
+    pages = posts.skip((page - 1) * 10).limit(10)
+    return render_template('quickcheck/index.html', pages=pages, pager=pager, search_item=search_item)
 
 
-@app.route('/api/post/<id>', methods=['GET'])
-def get_post(id):
+@app.route('/api/post', methods=['GET'])
+def get_post():
     page = request.args.get('page')
     per_page = request.args.get('per_page')
     type = request.args.get('type')
+    id = request.args.get('id')
+
+    if id and id != "":
+        post = mongodb.db.newsbuk.find_one({'id': int(id)})
+        list_cur = [dict(post)]
+        return dumps(list_cur, indent=2)
 
     if type:
         posts = mongodb.db.newsbuk.find({'type': type})
@@ -76,7 +86,9 @@ def add_post():
     if data['id']:
         data.pop('id')
 
-    mongodb.db.addressbuk.insert_one(data)
+    data['id'] = random.randint(1000, 10000)
+    print(data)
+    mongodb.db.newsbuk.insert_one(data)
     return jsonify({'status': 'true', 'message': 'News Created'}), 200
 
 
