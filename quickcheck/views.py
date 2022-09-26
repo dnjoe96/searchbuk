@@ -1,5 +1,5 @@
 import random
-
+import time
 from flask import render_template, redirect, request, flash, url_for, jsonify
 from app import app, mongodb
 from datetime import datetime
@@ -12,6 +12,9 @@ import uuid
 class Pager:
     def __init__(self):
         self.has_prev = True
+
+    def to_date(self, poxis_time):
+        return datetime.utcfromtimestamp(poxis_time).strftime('%Y-%m-%d %H:%M:%S')
 
 
 @app.route('/quickcheck', methods=['GET', 'POST'])
@@ -83,10 +86,8 @@ def get_post():
 def add_post():
     data = request.json
 
-    if data['id']:
-        data.pop('id')
-
     data['id'] = random.randint(1000, 10000)
+    data['time'] = time.time()
     print(data)
     mongodb.db.newsbuk.insert_one(data)
     return jsonify({'status': 'true', 'message': 'News Created'}), 200
